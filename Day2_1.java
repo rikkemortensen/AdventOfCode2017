@@ -1,33 +1,48 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Scanner;
+import java.util.stream.Stream;
 
 public class Day2_1 {
 
+    private int total = 0;
+
     public static void main(String[] args) {
-        try {
-            List<Integer> allResults = new ArrayList<>();
 
-            int total = 0;
-            while (true) {
-                BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\rikke\\IdeaProjects\\src\\main\\java\\inputday2"));
+        Day2_1 aocDay2 = new Day2_1();
 
-                String line;
-                int numIterations = 0;
-                while ((line = br.readLine()) != null) {
-                    total += Integer.parseInt(line);
-                    if (allResults.contains(total)) {
-                        System.out.println(total);
-                        System.out.println(numIterations);
-                        System.exit(0);
-                    }
-                    allResults.add(total);
-                    numIterations++;
-                }
-                br.close();
+        final String file = "C:\\Users\\rikke\\IdeaProjects\\src\\main\\java\\inputday2.txt";
+
+        try (Stream<String> stream = Files.lines(Paths.get(file))) {
+            stream.forEach(str -> {aocDay2.processLine(str);});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(aocDay2.total);
+    }
+
+    private void processLine(String line) {
+        Scanner sc = new Scanner(line);
+        int max = 0;
+        int min = 0;
+        boolean isFirst = true;
+
+        while(sc.hasNext()) {
+            int next = sc.nextInt();
+            if(isFirst) {
+                max = next;
+                min = next;
+                isFirst = false;
             }
-        } catch(Exception e) {
-            e.printStackTrace();}
+            if(next > max) {
+                max = next;
+            }
+            if(next < min) {
+                min = next;
+            }
+        }
+        int dif = max - min;
+        total += dif;
     }
 }
